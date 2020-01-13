@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>Game</title>
+  <style media="screen">
+
+  </style>
+
+</head>
+
+<body>
+  <canvas id="canvas" width="820" height="820"></canvas>
+  <script type="text/javascript">
+    //----------鍵盤控制------------
+    document.onkeydown = function(e) {
+      var keyname = window.event ? e.keyCode : e.which;
+      // console.log(e.keyCode); //測試
+
+      switch (e.keyCode) {
+        case 40:
+          move(moveSeep, 0)
+          break;
+
+        case 38:
+          move(-moveSeep, 0)
+          break;
+
+        case 39:
+          move(0, moveSeep);
+          break;
+
+        case 37:
+          move(0, -moveSeep);
+          break;
+        default:
+
+      }
+
+
+    }
+    //----------遊戲初值------------
+
+
+    //角色
+    var moveSeep = 20;
+    var body_x = 400;
+    var body_y = 400;
+
+    var fraction = 0;
+
+    //遊戲數值
+    var width = 800;
+    var height = 800;
+
+
+    //NPC
+    var redBom_status = 0;
+    var redBom_x;
+    var redBom_y;
+
+    //----------遊戲畫面------------
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+    //Start
+
+
+
+    //移動
+    function move(thisX, thisY) {
+      // removeBox();
+
+
+      body_x += thisX;
+      body_y += thisY;
+
+      // body_x = redBom_x;
+      // body_y = redBom_y;
+      removeBox();
+
+      redBom();
+      ctx.beginPath();
+      ctx.rect(body_y, body_x, 8, 8);
+      ctx.fillStyle = "#D3B99F";
+      ctx.fill();
+      ctx.closePath();
+
+      rule();
+      log();
+
+
+    }
+    //規則
+    function rule() {
+
+      if (body_y >= width - moveSeep) {
+        body_y = (width - moveSeep);
+        console.log("超出遊戲框架" + (width-moveSeep));
+      }
+      if (body_y < 0 + moveSeep) {
+        body_y = 0 + moveSeep;
+        console.log("超出遊戲框架");
+      }
+
+      if (body_x > height - moveSeep) {
+        body_x = (height - moveSeep);
+        console.log("超出遊戲框架");
+      }
+
+      if (body_x <= 0 ) {
+        body_x = 0 + moveSeep;
+        console.log("超出遊戲框架");
+      }
+
+
+
+
+
+      // if (body_x < width - moveSeep) {
+      //   body_x = width - moveSeep;
+      //   console.log("超出遊戲框架");
+      // }
+    }
+    //更新畫布 (FPS)
+    function removeBox() {
+
+
+      ctx.clearRect(0, 0, width, height);
+      ctx.strokeRect(0, 0, width, height);
+      ctx.beginPath();
+      ctx.lineWidth = "6";
+      ctx.strokeStyle = "red";
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    //手動LOG QQ
+    function log() {
+      console.log("方塊目前位置：", body_x, body_y);
+      // redBom_y = Math.floor(Math.random() * 40) * 20;
+      console.log("紅點目前位置：", redBom_x, redBom_y);
+
+
+    }
+
+    function redBom() {
+
+      if (status == 0) {
+
+        redBom_x = Math.floor(Math.random() * 40) * 20;
+        redBom_y = Math.floor(Math.random() * 40) * 20;
+        console.log(redBom_x);
+        console.log(redBom_y);
+
+        ctx.rect(redBom_y, redBom_x, 8, 8);
+        ctx.fillStyle = "red";
+        ctx.fill();
+        ctx.closePath();
+        status = 1;
+
+      } else {
+        if (body_x == redBom_x && body_y == redBom_y) {
+          fraction += 10;
+          status = 0;
+          document.getElementById('rrr').innerHTML="目前分數：+"+fraction;
+          console.log("分數:" + fraction);
+        }
+        ctx.rect(redBom_y, redBom_x, 8, 8);
+        ctx.fillStyle = "#000000";
+        ctx.fill();
+        ctx.closePath();
+        console.log("等待被吃");
+      }
+
+    }
+  </script>
+  <br>
+<h3>按上下左右鍵即可開始遊戲。</h3>
+<br><h3 id ="rrr">目前分數：</h3>
+</body>
+
+</html>
